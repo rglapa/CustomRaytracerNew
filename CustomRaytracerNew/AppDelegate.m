@@ -14,19 +14,18 @@
 
 @implementation AppDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    // Insert code here to initialize your application
+#if TARGET_IOS
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)NSWorkspaceLaunchOptions
+{
+    return YES;
 }
+#else
 
-
-- (void)applicationWillTerminate:(NSNotification *)aNotification {
-    // Insert code here to tear down your application
-}
-
-
-- (BOOL)applicationSupportsSecureRestorableState:(NSApplication *)app {
+- (BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
+{
     return YES;
 }
 
-
+#endif
 @end
