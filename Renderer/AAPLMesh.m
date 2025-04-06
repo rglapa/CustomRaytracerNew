@@ -240,6 +240,7 @@
     // Create an `AAPLSubmesh` object for each submesh and add it to the submesh's array.
     for(NSUInteger index = 0; index < metalKitMesh.submeshes.count; index++)
     {
+        NSLog(@"Submesh index: %lul", index);
         // Create an app-specific submesh to hold the MetalKit submesh.
         AAPLSubmesh *submesh =
             [[AAPLSubmesh alloc] initWithModelIOSubmesh:modelIOMesh.submeshes[index]

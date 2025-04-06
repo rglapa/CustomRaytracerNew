@@ -61,7 +61,7 @@ typedef enum AAPLTextureIndex
 {
     AAPLTextureIndexBaseColor        = 0,
     AAPLTextureIndexMetallic         = 1,
-    AAPLTextureIndexRoughness         = 2,
+    AAPLTextureIndexRoughness        = 2,
     AAPLTextureIndexNormal           = 3,
     AAPLTextureIndexAmbientOcclusion = 4,
     AAPLTextureIndexIrradianceMap    = 5,

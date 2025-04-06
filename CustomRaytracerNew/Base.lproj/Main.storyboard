@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11134" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11134"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23727"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -673,7 +675,7 @@
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModuleProvider=""/>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate"/>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -688,6 +690,7 @@
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <value key="minSize" type="size" width="480" height="270"/>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
@@ -703,15 +706,174 @@
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
-                    <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <viewController id="XfG-lQ-9wD" customClass="ViewController" sceneMemberID="viewController">
+                    <view key="view" id="m2S-Jp-Qdl" customClass="MTKView">
+                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <customView id="VDO-Iu-ggH">
+                                <rect key="frame" x="20" y="324" width="179" height="271"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <subviews>
+                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hv9-CH-fQZ">
+                                        <rect key="frame" x="7" y="240" width="85" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Render Mode" id="6WX-Nh-1CS">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vSf-UG-gDK">
+                                        <rect key="frame" x="7" y="209" width="139" height="24"/>
+                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="LjT-gg-m3z">
+                                            <font key="font" metaFont="system"/>
+                                            <segments>
+                                                <segment label="No RT" width="43"/>
+                                                <segment label="RT" width="42" selected="YES" tag="1"/>
+                                                <segment label="Refl." width="42"/>
+                                            </segments>
+                                        </segmentedCell>
+                                        <connections>
+                                            <action selector="onRenderModeSegmentedControlAction:" target="XfG-lQ-9wD" id="UYE-1x-9pt"/>
+                                        </connections>
+                                    </segmentedControl>
+                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SNK-Qc-824">
+                                        <rect key="frame" x="23" y="173" width="43" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Speed" id="o96-wq-f3d">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dKY-UK-sZu" userLabel="Speed Slider">
+                                        <rect key="frame" x="23" y="145" width="138" height="28"/>
+                                        <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="PPP-kD-iyx">
+                                            <font key="font" metaFont="cellTitle"/>
+                                        </sliderCell>
+                                        <connections>
+                                            <action selector="onSpeedSliderAction:" target="XfG-lQ-9wD" id="5EB-qg-ejE"/>
+                                        </connections>
+                                    </slider>
+                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TVR-c6-Xgb">
+                                        <rect key="frame" x="23" y="129" width="81" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Metallic Bias" id="Fsr-bJ-TSY">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9Ys-36-Pup" userLabel="Metallic Slider">
+                                        <rect key="frame" x="24" y="97" width="137" height="28"/>
+                                        <sliderCell key="cell" state="on" alignment="left" maxValue="1" tickMarkPosition="above" sliderType="linear" id="8QD-e6-leW">
+                                            <font key="font" metaFont="cellTitle"/>
+                                        </sliderCell>
+                                        <connections>
+                                            <action selector="onMetallicBiasAction:" target="XfG-lQ-9wD" id="0AZ-rA-WME"/>
+                                        </connections>
+                                    </slider>
+                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3hs-rn-imV">
+                                        <rect key="frame" x="24" y="82" width="100" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Roughness Bias" id="8ih-WN-56x">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EaU-QQ-lvB" userLabel="Roughness Slider">
+                                        <rect key="frame" x="24" y="52" width="137" height="28"/>
+                                        <sliderCell key="cell" alignment="left" maxValue="0.5" tickMarkPosition="above" sliderType="linear" id="gHU-41-8g6">
+                                            <font key="font" metaFont="cellTitle"/>
+                                        </sliderCell>
+                                        <connections>
+                                            <action selector="onRoughnessBiasAction:" target="XfG-lQ-9wD" id="1jn-wg-kHR"/>
+                                        </connections>
+                                    </slider>
+                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hoF-f4-Q3f">
+                                        <rect key="frame" x="23" y="34" width="61" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Exposure" id="mjF-dM-UwF">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UmQ-DO-Nk6" userLabel="Exposure slider">
+                                        <rect key="frame" x="24" y="6" width="137" height="28"/>
+                                        <sliderCell key="cell" state="on" alignment="left" minValue="0.10000000000000001" maxValue="4" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="EWd-dr-kSE">
+                                            <font key="font" metaFont="cellTitle"/>
+                                        </sliderCell>
+                                        <connections>
+                                            <action selector="onExposureSliderAction:" target="XfG-lQ-9wD" id="GYJ-FV-SXq"/>
+                                        </connections>
+                                    </slider>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="vSf-UG-gDK" firstAttribute="top" secondItem="hv9-CH-fQZ" secondAttribute="bottom" constant="8" symbolic="YES" id="0Y9-A7-7zf"/>
+                                    <constraint firstItem="dKY-UK-sZu" firstAttribute="leading" secondItem="TVR-c6-Xgb" secondAttribute="leading" id="0uY-fh-EuA"/>
+                                    <constraint firstItem="vSf-UG-gDK" firstAttribute="top" secondItem="VDO-Iu-ggH" secondAttribute="top" constant="39" id="15e-Pf-o5s"/>
+                                    <constraint firstItem="TVR-c6-Xgb" firstAttribute="top" secondItem="dKY-UK-sZu" secondAttribute="bottom" constant="6" id="5ah-3S-O3D"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="TVR-c6-Xgb" secondAttribute="trailing" constant="20" symbolic="YES" id="7SN-Wf-deu"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="SNK-Qc-824" secondAttribute="trailing" constant="20" symbolic="YES" id="7SW-1I-F0m"/>
+                                    <constraint firstItem="hoF-f4-Q3f" firstAttribute="top" secondItem="EaU-QQ-lvB" secondAttribute="bottom" constant="8" id="99N-h6-q21"/>
+                                    <constraint firstItem="SNK-Qc-824" firstAttribute="leading" secondItem="VDO-Iu-ggH" secondAttribute="leading" constant="25" id="9Nk-lJ-pIW"/>
+                                    <constraint firstAttribute="trailing" secondItem="3hs-rn-imV" secondAttribute="trailing" constant="57" id="9qd-uV-6Wl"/>
+                                    <constraint firstItem="vSf-UG-gDK" firstAttribute="leading" secondItem="hv9-CH-fQZ" secondAttribute="leading" id="JCV-6w-jUK"/>
+                                    <constraint firstItem="hoF-f4-Q3f" firstAttribute="top" secondItem="EaU-QQ-lvB" secondAttribute="bottom" constant="8" id="OVu-om-b3y"/>
+                                    <constraint firstItem="vSf-UG-gDK" firstAttribute="leading" secondItem="VDO-Iu-ggH" secondAttribute="leading" constant="9" id="PeO-Um-2Ar"/>
+                                    <constraint firstItem="dKY-UK-sZu" firstAttribute="top" secondItem="SNK-Qc-824" secondAttribute="bottom" constant="2" id="R4p-eJ-1aE"/>
+                                    <constraint firstItem="SNK-Qc-824" firstAttribute="top" secondItem="vSf-UG-gDK" secondAttribute="bottom" constant="21" id="R9w-Xt-HRV"/>
+                                    <constraint firstItem="3hs-rn-imV" firstAttribute="top" secondItem="9Ys-36-Pup" secondAttribute="bottom" constant="5" id="ThA-dx-0Wb"/>
+                                    <constraint firstItem="9Ys-36-Pup" firstAttribute="trailing" secondItem="dKY-UK-sZu" secondAttribute="trailing" id="XPC-bK-DGw"/>
+                                    <constraint firstItem="dKY-UK-sZu" firstAttribute="leading" secondItem="VDO-Iu-ggH" secondAttribute="leading" constant="25" id="YEt-Jy-wwD"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="hv9-CH-fQZ" secondAttribute="trailing" constant="20" symbolic="YES" id="aN7-1B-1Uo"/>
+                                    <constraint firstItem="EaU-QQ-lvB" firstAttribute="trailing" secondItem="UmQ-DO-Nk6" secondAttribute="trailing" id="bCh-uK-alA"/>
+                                    <constraint firstAttribute="trailing" secondItem="EaU-QQ-lvB" secondAttribute="trailing" constant="20" symbolic="YES" id="bRd-UD-hia"/>
+                                    <constraint firstAttribute="trailing" secondItem="dKY-UK-sZu" secondAttribute="trailing" constant="20" id="c2a-Gh-fyD"/>
+                                    <constraint firstItem="hoF-f4-Q3f" firstAttribute="leading" secondItem="UmQ-DO-Nk6" secondAttribute="leading" constant="-1" id="d50-Gu-XgM"/>
+                                    <constraint firstItem="EaU-QQ-lvB" firstAttribute="top" secondItem="3hs-rn-imV" secondAttribute="bottom" constant="4" id="dII-0Q-7aX"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="hoF-f4-Q3f" secondAttribute="trailing" constant="20" symbolic="YES" id="dUd-rR-WRT"/>
+                                    <constraint firstItem="EaU-QQ-lvB" firstAttribute="leading" secondItem="VDO-Iu-ggH" secondAttribute="leading" constant="26" id="gMJ-pX-DHb"/>
+                                    <constraint firstItem="UmQ-DO-Nk6" firstAttribute="top" secondItem="hoF-f4-Q3f" secondAttribute="bottom" constant="2" id="hQv-AH-zXI"/>
+                                    <constraint firstItem="SNK-Qc-824" firstAttribute="leading" secondItem="9Ys-36-Pup" secondAttribute="leading" constant="-1" id="mWY-xP-HD9"/>
+                                    <constraint firstItem="9Ys-36-Pup" firstAttribute="leading" secondItem="3hs-rn-imV" secondAttribute="leading" id="mnE-41-qYs"/>
+                                    <constraint firstItem="3hs-rn-imV" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="EaU-QQ-lvB" secondAttribute="leading" id="n1X-7w-RRz"/>
+                                    <constraint firstItem="9Ys-36-Pup" firstAttribute="top" secondItem="TVR-c6-Xgb" secondAttribute="bottom" constant="6" id="ot0-AA-07f"/>
+                                    <constraint firstItem="EaU-QQ-lvB" firstAttribute="leading" secondItem="hoF-f4-Q3f" secondAttribute="leading" constant="1" id="pfe-fT-HSu"/>
+                                    <constraint firstItem="9Ys-36-Pup" firstAttribute="trailing" secondItem="EaU-QQ-lvB" secondAttribute="trailing" id="rMw-Ws-T1e"/>
+                                </constraints>
+                            </customView>
+                            <progressIndicator maxValue="100" displayedWhenStopped="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="iFZ-aT-jeG">
+                                <rect key="frame" x="456" y="315" width="16" height="16"/>
+                            </progressIndicator>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OFQ-aR-AMt">
+                                <rect key="frame" x="418" y="275" width="92" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Loading scene" id="2D7-XF-Irc">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="OFQ-aR-AMt" firstAttribute="top" secondItem="iFZ-aT-jeG" secondAttribute="bottom" constant="24" id="1QI-9P-3oE"/>
+                            <constraint firstAttribute="trailing" secondItem="OFQ-aR-AMt" secondAttribute="trailing" constant="292" id="T1M-yD-ifq"/>
+                            <constraint firstItem="OFQ-aR-AMt" firstAttribute="centerX" secondItem="iFZ-aT-jeG" secondAttribute="centerX" id="YJj-dt-uoW"/>
+                            <constraint firstAttribute="bottom" secondItem="OFQ-aR-AMt" secondAttribute="bottom" constant="275" id="rLs-of-czZ"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="configBackdrop" destination="VDO-Iu-ggH" id="g1m-d2-KR5"/>
+                        <outlet property="exposureSlider" destination="UmQ-DO-Nk6" id="pOa-j4-ucm"/>
+                        <outlet property="loadingLabel" destination="OFQ-aR-AMt" id="oay-GI-qei"/>
+                        <outlet property="loadingSpinner" destination="iFZ-aT-jeG" id="lLw-p6-qF4"/>
+                        <outlet property="metallicBiasSlider" destination="9Ys-36-Pup" id="DSV-Mp-XGu"/>
+                        <outlet property="renderModeControl" destination="vSf-UG-gDK" id="D4c-1I-EE0"/>
+                        <outlet property="roughnessBiasSlider" destination="EaU-QQ-lvB" id="F0f-Gw-Rag"/>
+                        <outlet property="speedSlider" destination="dKY-UK-sZu" id="gQS-LJ-tGG"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="655"/>
+            <point key="canvasLocation" x="163" y="801"/>
         </scene>
     </scenes>
 </document>

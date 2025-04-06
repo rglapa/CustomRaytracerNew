@@ -21,7 +21,7 @@
 
 #if (TARGET_MACOS && defined(__MAC_15_0) && (__MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_15_0)) || \
 (TARGET_IOS && defined(__IPHONE_18_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_18_0))
-    #define AAPL_SUPPORTS_RESIDENCY_SETS 1
+    #define AAPL_SUPPORTS__SETS 1
 #else
 #define AAPL_SUPPORTS_RESIDENCY_SETS 0
 #endif
@@ -147,6 +147,11 @@ void arrayToBatchMethodHelper(NSArray *array, void (^callback)(__unsafe_unretain
         _sceneResources = [[NSMutableArray alloc] init];
         _sceneHeaps = [[NSMutableArray alloc] init];
         
+        // Start loading view and load assets
+        [self loadMetalWithView:view];
+        [self loadAssets];
+        
+        
         BOOL createdArgumentBuffers = NO;
         
         char* opts = getenv("DISABLE_METAL3_FEATURES");
@@ -166,17 +171,20 @@ void arrayToBatchMethodHelper(NSArray *array, void (^callback)(__unsafe_unretain
         {
             [self buildSceneArgumentBufferFromReflectionFunction:_rtReflectionFunction];
         }
-            // Call this last to ensure everything else builds.
-            [self resizeRTReflectionMapTo:view.drawableSize];
-            [self buildRTAccelerationStructures];
+        // Call this last to ensure everything else builds.
+        [self resizeRTReflectionMapTo:view.drawableSize];
+        [self buildRTAccelerationStructures];
             
 #if AAPL_SUPPORTS_RESIDENCY_SETS
       if ((opts == NULL) || (strstr(opts, "1") != opts))
       {
           if (@available(macOS 15, iOS 18, *))
           {
-              [self buildSceneResidencySet];
-              _useResidencySet = YES;
+              if ( [_device supportsFamily:MTLGPUFamilyApple6])
+              {
+                  [self buildSceneResidencySet];
+                  _useResidencySet = YES;
+              }
           }
       }
 #endif
@@ -434,7 +442,7 @@ void arrayToBatchMethodHelper(NSArray *array, void (^callback)(__unsafe_unretain
     NSURL *modelFileURL = [[NSBundle mainBundle] URLForResource:@"Models/firetruck.obj" withExtension:nil];
     
     NSAssert(modelFileURL, @"Could not find model (%@) file in bundle creating specular texture", modelFileURL.absoluteString);
-    
+    NSLog(@"modelFileURL String: %@",modelFileURL.absoluteString);
     NSMutableArray<AAPLMesh*>* scene = [[NSMutableArray alloc] init];
     [scene addObjectsFromArray:[AAPLMesh newMeshesFromURL:modelFileURL
                                   modelIOVertexDescriptor:modelIOVertexDescriptor
@@ -518,7 +526,7 @@ void arrayToBatchMethodHelper(NSArray *array, void (^callback)(__unsafe_unretain
 #if TARGET_MACOS
     [instanceArgumentBuffer didModifyRange:NSMakeRange(0, instanceArgumentBuffer.length)];
 #endif
-    
+    NSLog(@"Mesh Count at NSUInteger: %lul", _meshes.count);
     NSUInteger meshArgumentSize = meshEncoder.encodedLength * _meshes.count;
     id<MTLBuffer> meshArgumentBuffer = [self newBufferWithLabel:@"meshArgumentBuffer"
                                                          length:meshArgumentSize
@@ -528,6 +536,7 @@ void arrayToBatchMethodHelper(NSArray *array, void (^callback)(__unsafe_unretain
     for (NSUInteger i = 0;i < _meshes.count; ++i)
     {
         AAPLMesh* mesh = _meshes[i];
+        NSLog(@"Mesh: %@", _meshes[i]);
         [meshEncoder setArgumentBuffer:meshArgumentBuffer offset:i * meshEncoder.encodedLength];
         
         MTKMesh* metalKitMesh = mesh.metalKitMesh;
@@ -630,9 +639,9 @@ NS_AVAILABLE(15, 18)
 
 - (id<MTLBuffer>)newBufferWithLabel:(NSString *)label length:(NSUInteger)length options:(MTLResourceOptions)options
 {
+    NSLog(@"Buffer Label: %@ Length: %lul",label, length);
     id<MTLBuffer> buffer = [_device newBufferWithLength:length options:options];
     buffer.label = label;
-    
     [_sceneResources addObject:buffer];
     
     return buffer;
@@ -656,7 +665,7 @@ NS_AVAILABLE(15, 18)
     id<MTLBuffer> instanceArgumentBuffer = [self newBufferWithLabel:@"instanceArgumentBuffer"
                                                              length:instanceArgumentSize
                                                             options:storageMode];
-    
+    NSLog(@"InstanceArgumentBuffer created");
     // Encode the instances array in `Scene` (`Scene::instances`).
     for (NSUInteger i = 0;i< kMaxModelInstances; ++i)
     {
@@ -670,10 +679,11 @@ NS_AVAILABLE(15, 18)
 #endif
     
     NSUInteger meshArgumentSize = sizeof(struct Mesh) * _meshes.count;
+    NSLog(@"meshArgumentSize: %lul", sizeof(struct Mesh));
     id<MTLBuffer> meshArgumentBuffer = [self newBufferWithLabel:@"meshArgumentBuffer"
                                                          length:meshArgumentSize
                                                         options:storageMode];
-    
+    NSLog(@"meshArgumentBuffer created");
     // Encode the meshes array in Scene (Scene::meshes).
     for (NSUInteger i = 0;i<_meshes.count; ++i)
     {
@@ -830,6 +840,7 @@ NS_AVAILABLE(15, 18)
         NSMutableArray<MTLAccelerationStructureTriangleGeometryDescriptor*>* geometries = [NSMutableArray arrayWithCapacity:mesh.submeshes.count];
         for(AAPLSubmesh* submesh in mesh.submeshes)
         {
+            NSLog(@"Mesh submeshes count: %lul",mesh.submeshes.count);
             MTLAccelerationStructureTriangleGeometryDescriptor* g = [MTLAccelerationStructureTriangleGeometryDescriptor descriptor];
             g.vertexBuffer = mesh.metalKitMesh.vertexBuffers.firstObject.buffer;
             g.vertexBufferOffset = mesh.metalKitMesh.vertexBuffers.firstObject.offset;
@@ -955,6 +966,7 @@ NS_AVAILABLE(15, 18)
 
 matrix_float4x4 calculateTransform(ModelInstance instance)
 {
+    NSLog(@"calculateTransform run");
     vector_float3 rotationAxis = {0, 1, 0};
     matrix_float4x4 rotationMatrix = matrix4x4_rotation(instance.rotation, rotationAxis);
     matrix_float4x4 translationMatrix = matrix4x4_translation(instance.position);

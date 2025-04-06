@@ -24,6 +24,9 @@ typedef enum AAPLArgumentBufferID
     AAPLArgumentBufferIDMeshGenerics,
     AAPLArgumentBufferIDMeshSubmeshes,
     
+    AAPLArgumentBufferIDInstanceMesh,
+    AAPLArgumentBufferIDInstanceTransform,
+    
     AAPLArgumentBufferIDSceneInstances,
     AAPLArgumentBufferIDSceneMeshes
 } AAPLArgumentBufferID;
